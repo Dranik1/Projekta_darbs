@@ -72,7 +72,6 @@ def registration_root_function():
 
     Button(registration_root, text="Registrtion", command=registration_function).pack()
 
-
 #funkcija atjaunošanas logam
 def update_root_function():
 
@@ -174,6 +173,46 @@ def update_root_function():
 
     Button(update_root, text='Save', padx=10, pady=10, command=update_function).pack()
 
+#funkcija dzēšanas logam
+def delete_root_function():
+
+    def delete_function():
+        pk = entry_pk.get()
+
+        try:
+            conn.execute("Delete from Dalibnieks where pk = ?", (pk, ))
+            conn.commit()
+            messagebox.showinfo("", "Deletion is complete")
+        except Exception as e:
+            messagebox.showerror("", e)
+    
+    delete_root = Toplevel()
+    delete_root.geometry("500x500+750+300")
+    delete_root.resizable(width=False, height=False)
+
+    entry_pk = Entry(delete_root)
+    entry_pk.pack()
+
+    Button(delete_root, text="Delete", padx=10, pady=10, command=delete_function).pack()
+
+def find_root_function():
+
+    def find_function():
+        pk = entry_pk.get()
+
+        cur.execute("Select * from Dalibnieks where id = ?", (pk, ))
+        for result in cur:
+            return result
+        messagebox.showinfo("", result)
+
+    find_root = Toplevel()
+    find_root.geometry("500x500+750+300")
+    find_root.resizable(width=False, height=False)
+
+    entry_pk = Entry(find_root)
+    entry_pk.pack()
+
+    Button(find_root, text="Find", padx=10, pady=10, command=find_function).pack()
 
 #Galvenais logs
 main_root = Tk()
@@ -184,6 +223,8 @@ main_root.resizable(width=False, height=False)
 
 registration = Button(main_root, text="Registration", padx=10, pady=10, command=registration_root_function).pack()
 update = Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack()
+find = Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack()
+delete = Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack()
 
 
 main_root.mainloop()
