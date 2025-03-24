@@ -27,12 +27,15 @@ def registration_root_function():
 
         data_list = [name, surname, age, belt, pk]
 
+        name_list = ['name', 'surname', 'age', 'belt', 'personal code']
+
         name_patt = r'^[A-ZĀ-Ž][a-zā-ž]$'
-        age_patt = r'^\d[1-3]$'
+        age_patt = r'\d{1,3}'
         belt_patt = r'[0-9]{1,2}[\sDan, \sKyu]'
-        pk_patt = r'\d[6]+[-]+\d[5]'
+        pk_patt = r'\d{6}+[-]+\d{5}'
 
         pattern_list = [name_patt, name_patt, age_patt, belt_patt, pk_patt]
+
 
         #datu pareizrakstīšanas pārbaude
         try:
@@ -40,7 +43,7 @@ def registration_root_function():
                 if re.match(pattern_list[i], data_list[i]):
                     pass
                 else:
-                    print('a')
+                    messagebox.showerror("ValueError", f"{name_list[i]} is in incorrect form")
 
             conn.execute("INSERT INTO Dalibnieks(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
             conn.commit()
@@ -120,9 +123,41 @@ def update_root_function():
         pk_patt = r'\d[6]+[-]+\d[5]'
 
 
-        if what == 'name' or what == 'surname':
+        if what == 'name':
             if re.match(name_patt, on):
                 pass
+            else:
+                messagebox.showerror('', 'name error')
+        elif what == 'surname':
+            if re.match(name_patt, on):
+                pass
+            else:
+                messagebox.showerror('', 'surname error')
+        elif what == 'age':
+            if re.match(age_patt, on):
+                pass
+            else:
+                messagebox.showerror('', 'age error')
+        elif what == 'belt':
+            if re.match(belt_patt, on):
+                pass
+            else:
+                messagebox.showerror('', 'belt error')
+        elif what == 'personal code':
+            if re.match(pk_patt, on):
+                pass
+            else:
+                messagebox.showerror('', 'personal code error')
+        else:
+            messagebox.showerror("", "Unexpected error")
+
+        
+        #Izmaiņas datu bāzē
+        conn.execute("UPDATE Dalibnieks SET ? = ? WHERE pk = ?;", (what, on, who))
+        conn.commit()
+
+        messagebox.showinfo("Data is updated")
+    
 
 
     update_root = Toplevel()
