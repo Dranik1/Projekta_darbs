@@ -33,7 +33,7 @@ def registration_root_function():
 
         try:
             for i in range(5):
-                if re.match(pattern_list[i-1], data_list[i-1]):
+                if re.match(pattern_list[i], data_list[i]):
                     pass
                 else:
                     print('a')
