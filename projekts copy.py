@@ -4,7 +4,7 @@ from tkinter import messagebox
 import re
 import sqlite3
 from difflib import SequenceMatcher
-
+from tkcalendar.calendar_ import Calendar
 
 #Datu bāzes atveršana
 conn = sqlite3.connect('dalibnieki.db')
@@ -226,6 +226,11 @@ def find_root_function():
 
     Button(find_root, text="Find", padx=10, pady=10, command=find_function).pack()
 
+def calendar_root_function():
+    calendar_root = Toplevel()
+    calendar_main = Calendar(calendar_root)
+    calendar_main.pack()
+
 #Galvenais logs
 main_root = Tk()
 main_root.geometry("500x500+750+300")
@@ -237,6 +242,7 @@ registration = Button(main_root, text="Registration", padx=10, pady=10, command=
 update = Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack()
 find = Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack()
 delete = Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack()
+cal = Button(main_root, text="Calendar", padx=10, pady=10, command=calendar_root_function).pack()
 
 
 main_root.mainloop()
