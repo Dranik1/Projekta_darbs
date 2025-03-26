@@ -195,15 +195,27 @@ def delete_root_function():
 
     Button(delete_root, text="Delete", padx=10, pady=10, command=delete_function).pack()
 
+#funkcija atrašanas logam
 def find_root_function():
 
     def find_function():
         pk = entry_pk.get()
+        pk_patt = r'\d{6}+[-]+\d{5}'
 
-        cur.execute("Select * from Dalibnieks where id = ?", (pk, ))
-        for result in cur:
-            return result
-        messagebox.showinfo("", result)
+        try:
+            if re.match(pk_patt, pk):
+                cur.execute("Select * from Dalibnieks where pk = ?", (pk, ))
+                result = cur.fetchone()
+                if result == None:
+                    messagebox.showinfo("", "There is no perticipants with such personal code")
+                else:
+                    messagebox.showinfo("", result)
+            
+            else:
+                messagebox.showerror("ValueError", "Please write personal code correctly")
+        
+        except Exception as e:
+            messagebox.showerror("Unexpected Error", e)
 
     find_root = Toplevel()
     find_root.geometry("500x500+750+300")
