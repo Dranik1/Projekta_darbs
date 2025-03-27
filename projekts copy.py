@@ -4,7 +4,7 @@ from tkinter import messagebox
 import re
 import sqlite3
 from difflib import SequenceMatcher
-from tkcalendar.calendar_ import Calendar
+#from tkcalendar.calendar_ import Calendar
 
 #Datu bāzes atveršana
 conn = sqlite3.connect('dalibnieki.db')
