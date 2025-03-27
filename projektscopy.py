@@ -55,22 +55,27 @@ def registration_root_function():
     registration_root = Toplevel()
     registration_root.geometry('500x500+900+300')
 
+    Label(registration_root, text="Ievadiet vardu (Daniils)").pack()
     entry_name = Entry(registration_root)
-    entry_name.pack()
+    entry_name.pack(padx=10, pady=5)
 
+    Label(registration_root, text="Ievadiet uzvardu (Ivanovs)").pack()
     entry_surname = Entry(registration_root)
-    entry_surname.pack()
+    entry_surname.pack(padx=10, pady=5)
 
+    Label(registration_root, text="Ievadiet vecumu (18)").pack()
     entry_age = Entry(registration_root)
-    entry_age.pack()
+    entry_age.pack(padx=10, pady=5)
 
+    Label(registration_root, text="Ievadiet jostu (4 Kyu)").pack()
     entry_belt = Entry(registration_root)
-    entry_belt.pack()
+    entry_belt.pack(padx=10, pady=5)
 
+    Label(registration_root, text="Ievadiet personas kodu (123456-12345)").pack()
     entry_pk = Entry(registration_root)
-    entry_pk.pack()
+    entry_pk.pack(padx=10, pady=5)
 
-    Button(registration_root, text="Registrtion", command=registration_function).pack()
+    Button(registration_root, text="Registrtion", command=registration_function).pack(padx=10, pady=10)
 
 #funkcija atjaunošanas logam
 def update_root_function():
@@ -162,16 +167,19 @@ def update_root_function():
     update_root = Toplevel()
     update_root.geometry('500x500+750+300')
 
+    Label(update_root, text="Ievadiet ko jūs gribāt izmainīt (name, surname, age, belt, pk)").pack()
     entry_what = Entry(update_root)
-    entry_what.pack()
+    entry_what.pack(padx=10, pady=5)
 
+    Label(update_root, text="Ievadiet uz ko jūs gribāt izmainīt").pack()
     entry_on = Entry(update_root)
-    entry_on.pack()
+    entry_on.pack(padx=10, pady=5)
 
+    Label(update_root, text="Ievadiet kam jūs gribāt to izmainīt (personas kodu)").pack()
     entry_who = Entry(update_root)
-    entry_who.pack()
+    entry_who.pack(padx=10, pady=5)
 
-    Button(update_root, text='Save', padx=10, pady=10, command=update_function).pack()
+    Button(update_root, text='Save', padx=10, pady=10, command=update_function).pack(padx=10, pady=10)
 
 #funkcija dzēšanas logam
 def delete_root_function():
@@ -190,10 +198,11 @@ def delete_root_function():
     delete_root.geometry("500x500+750+300")
     delete_root.resizable(width=False, height=False)
 
+    Label(delete_root, text="Ievadiet kas jūš gribāt izdzēst (personas kodu)").pack()
     entry_pk = Entry(delete_root)
-    entry_pk.pack()
+    entry_pk.pack(padx=10, pady=5)
 
-    Button(delete_root, text="Delete", padx=10, pady=10, command=delete_function).pack()
+    Button(delete_root, text="Delete", padx=10, pady=10, command=delete_function).pack(padx=10, pady=10)
 
 #funkcija atrašanas logam
 def find_root_function():
@@ -221,10 +230,11 @@ def find_root_function():
     find_root.geometry("500x500+750+300")
     find_root.resizable(width=False, height=False)
 
+    Label(find_root, text="Ievadiet personas kodu").pack()
     entry_pk = Entry(find_root)
-    entry_pk.pack()
+    entry_pk.pack(padx=10, pady=5)
 
-    Button(find_root, text="Find", padx=10, pady=10, command=find_function).pack()
+    Button(find_root, text="Find", padx=10, pady=10, command=find_function).pack(padx=10, pady=10)
 
 def calendar_root_function():
     calendar_root = Toplevel()
@@ -238,11 +248,11 @@ main_root.resizable(width=False, height=False)
 
 
 
-registration = Button(main_root, text="Registration", padx=10, pady=10, command=registration_root_function).pack()
-update = Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack()
-find = Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack()
-delete = Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack()
-cal = Button(main_root, text="Calendar", padx=10, pady=10, command=calendar_root_function).pack()
+registration = Button(main_root, text="Registration", padx=10, pady=10, command=registration_root_function).pack(padx=10, pady=10)
+update = Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack(padx=10, pady=10)
+find = Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack(padx=10, pady=10)
+delete = Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack(padx=10, pady=10)
+cal = Button(main_root, text="Calendar", padx=10, pady=10, command=calendar_root_function).pack(padx=10, pady=10)
 
 
 main_root.mainloop()
