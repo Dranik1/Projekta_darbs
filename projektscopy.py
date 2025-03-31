@@ -75,7 +75,7 @@ def registration_root_function():
     entry_pk = Entry(registration_root)
     entry_pk.pack(padx=10, pady=5)
 
-    Button(registration_root, text="Registrtion", command=registration_function).pack(padx=10, pady=10)
+    Button(registration_root, text="Registration", command=registration_function).pack(padx=10, pady=10)
 
 #funkcija atjaunošanas logam
 def update_root_function():
