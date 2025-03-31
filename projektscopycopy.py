@@ -1,6 +1,6 @@
 #Bibleoteku izsaukšana
 from tkinter import *
-from tkinter import messagebox, ttk
+from tkinter import messagebox
 import re
 import sqlite3
 from difflib import SequenceMatcher
@@ -80,54 +80,76 @@ def registration_root_function():
 #funkcija atjaunošanas logam
 def update_root_function():
 
-    values = ['name', 'surname', 'age', 'belt', 'personal code']
-
     #atjaunošanas funkcija
     def update_function():
         what = entry_what.get()
         on = entry_on.get()
         who = entry_who.get()
+        changes = False
+        name_list = ['surname', 'age', 'belt', 'personal code', 'name']
+
+        
+        #pārbaude kādu datu lietotājs grīb mainīt
+        for i in range(5):
+            if similar(name_list[i], what) == 1:
+                what = name_list[i]
+                #print(what)
+                changes = True
+                break
+            elif similar(name_list[i], what)>0.6:
+                if what == 'surname':
+                    what = 'surname'
+                    changes = True
+                    #print(what)
+                    break
+                elif what == 'name':
+                    what = 'name'
+                    changes = True
+                    #print(what)
+                    break
+                else:
+                    response = messagebox.askyesno("", f"Do you mean {name_list[i]}?")
+                    if response == True:
+                        what = name_list[i]
+                        changes = True
+                        break
+                    else:
+                        pass
+
+        if changes == False:
+                messagebox.showinfo("", "Try again: remember program has only options like name, surname, age, belt, and personal code")
+
 
         #pārbaude datu pareizrakstību
-        name_patt = r'[A-ZĀ-Ž][a-zā-ž]'
-        age_patt = r'^\d{1,3}$'
+        name_patt = r'^[A-ZĀ-Ž][a-zā-ž]$'
+        age_patt = r'\d[1-3]'
         belt_patt = r'[0-9]{1,2}[\sDan, \sKyu]'
-        pk_patt = r'\d{6}+[-]+\d{5}'
+        pk_patt = r'\d[6]+[-]+\d[5]'
 
 
         if what == 'name':
             if re.match(name_patt, on):
-                conn.execute("UPDATE Dalibnieks SET name = ? WHERE pk = ?;", (on, who))
-                conn.commit()
-                messagebox.showinfo("Data is updated")
+                return what
             else:
                 messagebox.showerror('', 'name error')
         elif what == 'surname':
             if re.match(name_patt, on):
-                conn.execute("UPDATE Dalibnieks SET surname = ? WHERE pk = ?;", (on, who))
-                conn.commit()
-                messagebox.showinfo("Data is updated")
+                pass
             else:
                 messagebox.showerror('', 'surname error')
         elif what == 'age':
             if re.match(age_patt, on):
-                conn.execute("UPDATE Dalibnieks SET age = ? WHERE pk = ?;", (on, who))
-                conn.commit()
-                messagebox.showinfo("Data is updated")
+                pass
             else:
                 messagebox.showerror('', 'age error')
         elif what == 'belt':
             if re.match(belt_patt, on):
-                conn.execute("UPDATE Dalibnieks SET belt = ? WHERE pk = ?;", (on, who))
-                conn.commit()
-                messagebox.showinfo("Data is updated")
+                pass
             else:
                 messagebox.showerror('', 'belt error')
         elif what == 'personal code':
             if re.match(pk_patt, on):
-                conn.execute("UPDATE Dalibnieks SET pk = ? WHERE id = ?;", (on, who))
-                conn.commit()
-                messagebox.showinfo("Data is updated")
+                pass
             else:
                 messagebox.showerror('', 'personal code error')
         else:
@@ -135,10 +157,10 @@ def update_root_function():
 
         
         #Izmaiņas datu bāzē
-        #conn.execute("UPDATE Dalibnieks SET ? = ? WHERE pk = ?;", (what, on, who))
-        #conn.commit()
+        conn.execute("UPDATE Dalibnieks SET ? = ? WHERE pk = ?;", (what, on, who))
+        conn.commit()
 
-        #messagebox.showinfo("Data is updated")
+        messagebox.showinfo("Data is updated")
     
 
 
@@ -146,7 +168,7 @@ def update_root_function():
     update_root.geometry('500x500+750+300')
 
     Label(update_root, text="Ievadiet ko jūs gribāt izmainīt (name, surname, age, belt, pk)").pack()
-    entry_what = ttk.Combobox(update_root, width=30, values=values, state='readonly')
+    entry_what = Entry(update_root)
     entry_what.pack(padx=10, pady=5)
 
     Label(update_root, text="Ievadiet uz ko jūs gribāt izmainīt").pack()
@@ -194,7 +216,7 @@ def find_root_function():
                 cur.execute("Select * from Dalibnieks where pk = ?", (pk, ))
                 result = cur.fetchone()
                 if result == None:
-                    messagebox.showinfo("", "There is no participants with such personal code")
+                    messagebox.showinfo("", "There is no perticipants with such personal code")
                 else:
                     messagebox.showinfo("", result)
             
