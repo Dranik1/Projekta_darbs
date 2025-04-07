@@ -4,7 +4,7 @@ from tkinter import messagebox, ttk
 import re
 import sqlite3
 from difflib import SequenceMatcher
-from tkcalendar.calendar_ import Calendar
+#from tkcalendar.calendar_ import Calendar
 
 #Datu bāzes atveršana
 conn = sqlite3.connect('dalibnieki.db')
@@ -29,35 +29,41 @@ def registration_root_function():
 
         name_list = ['name', 'surname', 'age', 'belt', 'personal code']
 
-        name_patt = r'^[A-ZĀ-Ž][a-zā-ž]$'
+        name_patt = r'^[A-ZĀ-Ž]{1}[a-zā-ž]+$'
         age_patt = r'\d{1,3}'
         belt_patt = r'[0-9]{1,2}[\sDan, \sKyu]'
-        pk_patt = r'\d{6}+[-]+\d{5}'
+        pk_patt = r'\d{6}-\d{5}'
+        #pk_patt = r'\d'
 
         pattern_list = [name_patt, name_patt, age_patt, belt_patt, pk_patt]
 
 
         #datu pareizrakstīšanas pārbaude
         try:
-            for i in range(5):
+            for i in range(len(data_list)):
+                print(i)
                 if re.match(pattern_list[i], data_list[i]):
-                    pass
+                    print("b")
                 else:
                     messagebox.showerror("ValueError", f"{name_list[i]} is in incorrect form")
+                    break
+            if i == 4:
+                if where == "rezekne":
+                    conn.execute("INSERT INTO Dalibnieki_rezekne(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
+                elif where == "kraslava":
+                    conn.execute("INSERT INTO Dalibnieki_kraslava(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
+                elif where == "preili":
+                    conn.execute("INSERT INTO Dalibnieki_preili(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
+                else:
+                    messagebox.showerror("", "Unexpexted error")
+                            
+                conn.commit()
+                messagebox.showinfo('+', "Registration is complete")
 
-            if where == "rezekne":
-                conn.execute("INSERT INTO Dalibnieki_rezekne(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
-            elif where == "kraslava":
-                conn.execute("INSERT INTO Dalibnieki_kraslava(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
-            elif where == "preili":
-                conn.execute("INSERT INTO Dalibnieki_preili(name, surname, age, belt, pk) VALUES(?, ?, ?, ?, ?)", (name, surname, age, belt, pk))
-            else:
-                messagebox.showerror("", "Unexpexted error")
-                        
-            conn.commit()
-            messagebox.showinfo('+', "Registration is complete")
         except Exception as e:
             messagebox.showerror("-", e)
+
+        registration_root.destroy()
 
 
     registration_root = Toplevel()
@@ -94,17 +100,12 @@ def update_root_function():
         on = entry_on.get()
         who = entry_who.get()
 
-    
-
-        
-
-
 
         #pārbaude datu pareizrakstību
-        name_patt = r'^[A-ZĀ-Ž][a-zā-ž]$'
-        age_patt = r'\d[1-3]'
+        name_patt = r'^[A-ZĀ-Ž]{1}[a-zā-ž]+$'
+        age_patt = r'\d{1,3}'
         belt_patt = r'[0-9]{1,2}[\sDan, \sKyu]'
-        pk_patt = r'\d[6]+[-]+\d[5]'
+
 
 
         
@@ -210,6 +211,7 @@ def update_root_function():
         else:
             messagebox.showerror("", "Unexpected error")
 
+        update_root.destroy()
 
        
 
@@ -218,7 +220,7 @@ def update_root_function():
     update_root.geometry('500x500+750+300')
 
     Label(update_root, text="Ievadiet ko jūs gribāt izmainīt (name, surname, age, belt, pk)").pack()
-    entry_what = ttk.Combobox(update_root, values=name_list)
+    entry_what = ttk.Combobox(update_root, values=name_list, state='readonly')
     entry_what.pack(padx=10, pady=5)
 
     Label(update_root, text="Ievadiet uz ko jūs gribāt izmainīt").pack()
@@ -252,11 +254,11 @@ def delete_root_function():
                 messagebox.showinfo("", "Deletion is complete")
             else:
                 messagebox.showerror("", "Unexpected error")
-            conn.execute("Delete from Dalibnieks where pk = ?", (pk, ))
-            conn.commit()
-            messagebox.showinfo("", "Deletion is complete")
+
         except Exception as e:
             messagebox.showerror("", e)
+
+        delete_root.destroy()
     
     delete_root = Toplevel()
     delete_root.geometry("500x500+750+300")
@@ -273,7 +275,7 @@ def find_root_function():
 
     def find_function():
         pk = entry_pk.get()
-        pk_patt = r'\d{6}+[-]+\d{5}'
+        pk_patt = r'\d{6}-\d{5}'
 
         try:
             if re.match(pk_patt, pk):
@@ -297,6 +299,8 @@ def find_root_function():
         except Exception as e:
             messagebox.showerror("Unexpected Error", e)
 
+        find_root.destroy()
+
     find_root = Toplevel()
     find_root.geometry("500x500+750+300")
     find_root.resizable(width=False, height=False)
@@ -316,6 +320,7 @@ def calendar_root_function():
 def rezekne_root():
     global where
     where = "rezekne"
+
     #Galvenais logs
     main_root = Tk()
     main_root.geometry("500x500+750+300")
@@ -335,6 +340,7 @@ def rezekne_root():
 def kraslava_root():
     global where
     where = "kraslava"
+
     #Galvenais logs
     main_root = Tk()
     main_root.geometry("500x500+750+300")
@@ -342,11 +348,11 @@ def kraslava_root():
 
 
 
-    registration = Button(main_root, text="Registration", padx=10, pady=10, command=registration_root_function).pack(padx=10, pady=10)
-    update = Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack(padx=10, pady=10)
-    find = Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack(padx=10, pady=10)
-    delete = Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack(padx=10, pady=10)
-    cal = Button(main_root, text="Calendar", padx=10, pady=10, command=calendar_root_function).pack(padx=10, pady=10)
+    Button(main_root, text="Registration", padx=10, pady=10, command=registration_root_function).pack(padx=10, pady=10)
+    Button(main_root, text="Update", padx=10, pady=10, command=update_root_function).pack(padx=10, pady=10)
+    Button(main_root, text="Find", padx=10, pady=10, command=find_root_function).pack(padx=10, pady=10)
+    Button(main_root, text="Delete", padx=10, pady=10, command=delete_root_function).pack(padx=10, pady=10)
+    Button(main_root, text="Calendar", padx=10, pady=10, command=calendar_root_function).pack(padx=10, pady=10)
 
 
     main_root.mainloop()
@@ -354,6 +360,7 @@ def kraslava_root():
 def preili_root():
     global where
     where = "preili"
+
     #Galvenais logs
     main_root = Tk()
     main_root.geometry("500x500+750+300")
@@ -375,7 +382,7 @@ choice_root.geometry("500x500+750+300")
 choice_root.resizable(width=False, height=False)
 
 Button(choice_root, text="Rezekne", padx=10, pady=10, command=rezekne_root).pack(padx=10, pady=10)
-Button(choice_root, text="Kraslava", padx=10, pady=10, command=rezekne_root).pack(padx=10, pady=10)
-Button(choice_root, text="Preili", padx=10, pady=10, command=rezekne_root).pack(padx=10, pady=10)
+Button(choice_root, text="Kraslava", padx=10, pady=10, command=kraslava_root).pack(padx=10, pady=10)
+Button(choice_root, text="Preili", padx=10, pady=10, command=preili_root).pack(padx=10, pady=10)
 
 choice_root.mainloop()
