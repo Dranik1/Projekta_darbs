@@ -26,7 +26,7 @@ def root_size():
 
     main_root.mainloop()
 
-root_size()'''
+root_size()
 
 
 def root_size():
@@ -48,4 +48,15 @@ def root_size():
 
     main_root.mainloop()
 
-root_size()
+root_size()'''
+
+where = "rezekne"
+
+if where == "rezekne":
+    pass
+elif where == "kraslava":
+    pass
+elif where == "preili":
+    pass
+else:
+    pass
